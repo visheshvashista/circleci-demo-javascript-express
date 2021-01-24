@@ -1,7 +1,18 @@
 version: 2.1
-orbs:
-  node: circleci/node@3.0.0
+
+jobs:
+  create_infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Ensure backend infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file template.yml \
+              --stack-name my-stack
 workflows:
-  node-tests:
+  my_workflow:
     jobs:
-      - node/test
+      - create_infrastructure
